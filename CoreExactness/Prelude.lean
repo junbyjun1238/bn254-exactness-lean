@@ -5,30 +5,31 @@ namespace CoreExactness
 set_option autoImplicit false
 
 /--
-`CanonicalLift r x` means that the residue-class value `x : ZMod r`
-is represented by the integer `lift`, and that `lift` lies in `[0, r)`.
+`CanonicalLift r` packages an integer representative for a residue modulo `r`
+together with the claim that the representative lies in the canonical interval
+`[0, r)`.
 -/
-structure CanonicalLift (r : ℕ) where
-  lift : ℤ
-  inRange : 0 ≤ lift ∧ lift < r
+structure CanonicalLift (r : Nat) where
+  lift : Int
+  inRange : And (0 <= lift) (lift < Int.ofNat r)
 
 /--
-`Represents r x c` packages the fact that `x : ZMod r` is the image of the
-integer lift stored in `c`.
+`Represents r x c` means that the integer representative stored in `c` maps to
+`x : ZMod r`.
 -/
-def Represents (r : ℕ) (x : ZMod r) (c : CanonicalLift r) : Prop :=
+def Represents (r : Nat) (x : ZMod r) (c : CanonicalLift r) : Prop :=
   (c.lift : ZMod r) = x
 
 /--
-The canonical residue interval for a modulus `p`.
+Canonical residue interval for an integer modulus `p`.
 -/
-def InCanonicalResidueRange (p x : ℤ) : Prop :=
-  0 ≤ x ∧ x < p
+def InCanonicalResidueRange (p x : Int) : Prop :=
+  And (0 <= x) (x < p)
 
 /--
 The bounded quotient interval used by the core exactness statements.
 -/
-def InQuotientRange (B q : ℤ) : Prop :=
-  0 ≤ q ∧ q < B
+def InQuotientRange (b q : Int) : Prop :=
+  And (0 <= q) (q < b)
 
 end CoreExactness

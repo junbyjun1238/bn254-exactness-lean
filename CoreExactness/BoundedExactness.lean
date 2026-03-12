@@ -9,21 +9,24 @@ Paper target:
 `Bounded deferred-quotient exactness`.
 
 If `L`, `D`, and `q` are represented by canonical integer lifts, and
-`D + p * q` is known to stay in `[0, r)`, then an equality
-`L = D + p*q` in `ZMod r` upgrades to an exact equality in `ℤ`.
+`D + p * q` stays inside the canonical interval `[0, r)`, then an equality
+`L = D + p * q` in `ZMod r` should lift to an exact equality in `Int`.
+
+For the current checkpoint we keep the theorem boundary fixed and leave the
+proof as a later step.
 -/
 theorem boundedDeferredQuotientExactness
-  (r p B : ℕ)
+  (r p b : Nat)
   (L D q : ZMod r)
   (cL cD : CanonicalLift r)
-  (qLift : ℤ)
+  (qLift : Int)
   (hL : Represents r L cL)
   (hD : Represents r D cD)
-  (hqRange : InQuotientRange B qLift)
+  (hqRange : InQuotientRange (Int.ofNat b) qLift)
   (hqRep : (qLift : ZMod r) = q)
-  (hNoWrap : 0 ≤ cD.lift + (p : ℤ) * qLift ∧ cD.lift + (p : ℤ) * qLift < r)
+  (hNoWrap : And (0 <= cD.lift + Int.ofNat p * qLift) (cD.lift + Int.ofNat p * qLift < Int.ofNat r))
   (hEq : L = D + (p : ZMod r) * q) :
-  cL.lift = cD.lift + (p : ℤ) * qLift := by
+  cL.lift = cD.lift + Int.ofNat p * qLift := by
   sorry
 
 end CoreExactness
