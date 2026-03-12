@@ -19,12 +19,12 @@ theorem coreRowwiseExactnessFromCanonicalLifts
   (qLift : Int)
   (hL : Represents r L cL)
   (hD : Represents r D cD)
-  (hqRange : InQuotientRange (Int.ofNat b) qLift)
+  (_hqRange : InQuotientRange (Int.ofNat b) qLift)
   (hqRep : (qLift : ZMod r) = q)
   (hNoWrap : And (0 <= cD.lift + Int.ofNat p * qLift) (cD.lift + Int.ofNat p * qLift < Int.ofNat r))
   (hEq : L = D + (p : ZMod r) * q) :
   cL.lift = cD.lift + Int.ofNat p * qLift := by
   simpa using
-    boundedDeferredQuotientExactness r p b L D q cL cD qLift hL hD hqRange hqRep hNoWrap hEq
+    boundedDeferredQuotientExactness r p b L D q cL cD qLift hL hD _hqRange hqRep hNoWrap hEq
 
 end CoreExactness
