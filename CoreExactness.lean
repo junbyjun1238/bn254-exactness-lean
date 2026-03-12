@@ -1,0 +1,5 @@
+import CoreExactness.Prelude
+import CoreExactness.RowVacuity
+import CoreExactness.PolyVacuity
+import CoreExactness.BoundedExactness
+import CoreExactness.RowwiseExactness
