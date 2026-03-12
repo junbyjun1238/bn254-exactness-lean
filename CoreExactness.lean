@@ -4,3 +4,4 @@ import CoreExactness.PolyVacuity
 import CoreExactness.BoundedExactness
 import CoreExactness.RowwiseExactness
 import CoreExactness.EuclideanSemantics
+import CoreExactness.RangeExclusion

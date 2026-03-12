@@ -45,6 +45,11 @@ The current Lean package proves the following core statements.
      row-domain divisibility and still satisfies the expected low-degree bound
      `degree qPoly < n`.
 
+8. `quotientRangeExcludesNegInv`
+   - Under the manuscript-style unsigned quotient bound and explicit headroom,
+     the bounded quotient interval excludes the specific vacuous witness class
+     `-p^{-1}` in the prime-field outer modulus.
+
 ## Current Mathematical Boundary
 
 This repository proves the core algebraic spine only.
@@ -59,6 +64,8 @@ In scope:
 - polynomial vacuity over a finite evaluation domain,
 - divisibility by the row-domain vanishing polynomial.
 - a degree-facing corollary for the concrete interpolated vacuous quotient.
+- explicit exclusion of the `-p^{-1}` vacuous witness class under bounded
+  unsigned quotient ranges.
 
 Out of scope:
 
@@ -90,12 +97,6 @@ canonical-lift and no-wrap premises required for the integer lift step. This
 repository does not yet prove that a particular circuit backend enforces those
 premises automatically.
 
-### Remaining Gap
-
-The current package still does not formalize the bridge theorem saying that the
-bounded quotient ranges used in the manuscript eliminate the specific vacuous
-`-p^{-1}` witness class. That exclusion remains a separate follow-up theorem.
-
 ## Repository Layout
 
 - `CoreExactness/Prelude.lean`
@@ -104,6 +105,7 @@ bounded quotient ranges used in the manuscript eliminate the specific vacuous
 - `CoreExactness/BoundedExactness.lean`
 - `CoreExactness/RowwiseExactness.lean`
 - `CoreExactness/EuclideanSemantics.lean`
+- `CoreExactness/RangeExclusion.lean`
 - `CoreExactness.lean`
 - `docs/lean_formalization_scope_estimate.md`
 - `docs/lean_formalization_work_plan.md`
