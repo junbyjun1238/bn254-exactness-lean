@@ -50,6 +50,11 @@ The current package proves the following core results.
      the bounded quotient interval excludes the specific vacuous witness class
      `-p^{-1}` in the prime-field outer modulus.
 
+9. `boundedRepairExcludesNegInvAndRecoversEuclideanSemantics`
+   - A single manuscript-facing package theorem combines the bounded range
+     exclusion, rowwise exactness path, and Euclidean recovery path into one
+     result.
+
 ## Current Mathematical Boundary
 
 This repository proves the algebraic core only.
@@ -105,6 +110,7 @@ premises automatically.
 - `CoreExactness/RowwiseExactness.lean`
 - `CoreExactness/EuclideanSemantics.lean`
 - `CoreExactness/RangeExclusion.lean`
+- `CoreExactness/PackagedSemantics.lean`
 - `CoreExactness.lean`
 - `docs/lean_formalization_scope_estimate.md`
 - `docs/lean_formalization_work_plan.md`

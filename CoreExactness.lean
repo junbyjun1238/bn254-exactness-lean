@@ -5,3 +5,4 @@ import CoreExactness.BoundedExactness
 import CoreExactness.RowwiseExactness
 import CoreExactness.EuclideanSemantics
 import CoreExactness.RangeExclusion
+import CoreExactness.PackagedSemantics
