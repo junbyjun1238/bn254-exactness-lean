@@ -1,34 +1,83 @@
-﻿# BN254 Exactness Lean Formalization
+# BN254 Exactness Lean Formalization
 
-This repository isolates the Lean 4 formalization of the core theorem spine
-behind the deferred-quotient exactness note.
+This repository contains a standalone Lean 4 formalization of the core theorem
+spine behind the BN254 deferred-quotient exactness repair note.
 
-The goal is deliberately narrow:
+The formalization is intentionally narrow. It isolates the mathematical core of
+the vacuity diagnosis and the exactness repair, while leaving backend,
+catalogue, and circuit-integration questions outside the current scope.
 
-- formalize the vacuity diagnosis,
-- formalize the bounded exactness repair core,
-- keep the project machine-checkable and Codespaces-friendly,
-- avoid dragging in Halo2/backend/catalogue machinery too early.
+## What Is Proved
 
-## Scope
+The current Lean package proves the following core statements.
+
+1. `outerFieldGenericRowwiseVacuity`
+   - In any field, if `p != 0`, then a deferred-quotient row equation of the
+     form `L = D + p * Q` can be made tautologically true by choosing the
+     quotient witness pointwise as `(L - D) / p`.
+
+2. `boundedDeferredQuotientExactness`
+   - If two integer lifts represent the same residue in `ZMod r` and both lifts
+     lie in the canonical interval `[0, r)`, then they are equal as integers.
+
+3. `coreRowwiseExactnessFromCanonicalLifts`
+   - This packages the bounded exactness lemma in the manuscript-facing rowwise
+     form: canonical lifts for the residue side, an integer lift for the
+     quotient, a no-wrap bound, and a satisfied modular equality imply exact
+     integer equality.
+
+4. `polynomialLevelVacuity`
+   - If the quotient witness polynomial is chosen by interpolating the vacuous
+     rowwise quotient values over a finite evaluation domain, then the
+     deferred-quotient remainder vanishes on every sampled node.
+
+5. `polynomialLevelVacuity_dvd`
+   - The same polynomial-level vacuity construction implies that the
+     row-domain vanishing polynomial divides the deferred-quotient remainder.
+
+## Current Mathematical Boundary
+
+This repository proves the core algebraic spine only.
 
 In scope:
 
 - outer-field generic rowwise vacuity,
-- polynomial-level vacuity,
-- bounded deferred-quotient exactness,
-- core rowwise exactness from canonical lifts.
+- bounded exactness over canonical integer lifts,
+- manuscript-facing rowwise exactness from those lifts,
+- polynomial vacuity over a finite evaluation domain,
+- divisibility by the row-domain vanishing polynomial.
 
 Out of scope:
 
-- corollaries,
 - family-specific appendix audits,
-- wiring and coverage proofs,
+- selector wiring and catalogue coverage proofs,
 - Halo2 circuit semantics,
-- backend transcript or Fiat-Shamir claims,
-- benchmark correctness.
+- backend transcript extraction,
+- PCS or Fiat-Shamir soundness,
+- benchmark correctness or performance claims.
 
-## Layout
+## Important Scope Notes
+
+### General Evaluation Domains
+
+The polynomial divisibility result is stated for a general finite evaluation
+domain `omega : Fin n -> F` with an injectivity hypothesis. The divisor is the
+row-domain vanishing polynomial
+
+`rowVanishingPolynomial omega = ∏ i, (X - C (omega i))`.
+
+This is more general than a subgroup-specific statement such as `X^n - 1`. If
+the evaluation domain later specializes to a multiplicative subgroup, that
+specialization should be stated separately at the manuscript level.
+
+### Conditional Exactness
+
+The exactness theorems here are conditional theorems. They assume the
+canonical-lift and no-wrap premises required for the integer lift step. This
+repository does not yet prove that a particular circuit backend enforces those
+premises automatically.
+
+## Repository Layout
 
 - `CoreExactness/Prelude.lean`
 - `CoreExactness/RowVacuity.lean`
@@ -40,31 +89,32 @@ Out of scope:
 - `docs/lean_formalization_work_plan.md`
 - `docs/lean_codespaces_workflow.md`
 
-## Working Discipline
+## Build
 
-These rules are mandatory:
+This repo is designed to work both locally and in GitHub Codespaces.
 
-1. **Modularize aggressively**
-   - Keep one conceptual theorem family per module.
-   - If a file starts to mix setup, vacuity, and exactness, split it.
-
-2. **Use `sorry` first**
-   - Stabilize imports, definitions, and theorem statements before fighting proofs.
-   - Replace `sorry` incrementally.
-
-3. **Run `lake build` at every checkpoint**
-   - Small inner-loop builds are fine during proof work.
-   - The checkpoint rule is still a full `lake build`.
-
-## Codespaces
-
-This repo is meant to be opened directly in GitHub Codespaces.
-
-The `.devcontainer/` warm-up installs Lean, fetches mathlib cache, and runs:
+Required checkpoint:
 
 ```bash
 lake exe cache get
 lake build
 ```
 
-If you are working locally, the same commands are the first required checkpoint.
+The current intended state is a full successful `lake build` with no remaining
+`sorry` placeholders in the core theorem files.
+
+## Codespaces
+
+The repository includes a `.devcontainer/` setup that warms the environment by
+installing Lean, fetching the mathlib cache, and running the standard build
+path automatically.
+
+## Working Style
+
+These rules were used to build the current package and are kept explicit for
+future contributors:
+
+1. Modularize aggressively.
+2. Stabilize theorem boundaries before proof search.
+3. Use full `lake build` checkpoints instead of trusting local incremental
+   success.
