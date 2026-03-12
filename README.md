@@ -26,14 +26,24 @@ The current Lean package proves the following core statements.
      quotient, a no-wrap bound, and a satisfied modular equality imply exact
      integer equality.
 
-4. `polynomialLevelVacuity`
+4. `euclideanQuotientRemainderFromCanonicalLifts`
+   - Once the rowwise exactness theorem has produced an exact identity and the
+     designated residue lift lies in `[0, p)`, the residue is recovered as
+     `L mod p` and the quotient is recovered as `L / p`.
+
+5. `polynomialLevelVacuity`
    - If the quotient witness polynomial is chosen by interpolating the vacuous
      rowwise quotient values over a finite evaluation domain, then the
      deferred-quotient remainder vanishes on every sampled node.
 
-5. `polynomialLevelVacuity_dvd`
+6. `polynomialLevelVacuity_dvd`
    - The same polynomial-level vacuity construction implies that the
      row-domain vanishing polynomial divides the deferred-quotient remainder.
+
+7. `polynomialLevelVacuity_dvd_and_degree`
+   - The concrete Lagrange-interpolated vacuous quotient simultaneously yields
+     row-domain divisibility and still satisfies the expected low-degree bound
+     `degree qPoly < n`.
 
 ## Current Mathematical Boundary
 
@@ -44,8 +54,11 @@ In scope:
 - outer-field generic rowwise vacuity,
 - bounded exactness over canonical integer lifts,
 - manuscript-facing rowwise exactness from those lifts,
+- Euclidean quotient/remainder recovery from exactness plus canonical residue
+  range,
 - polynomial vacuity over a finite evaluation domain,
 - divisibility by the row-domain vanishing polynomial.
+- a degree-facing corollary for the concrete interpolated vacuous quotient.
 
 Out of scope:
 
@@ -77,6 +90,12 @@ canonical-lift and no-wrap premises required for the integer lift step. This
 repository does not yet prove that a particular circuit backend enforces those
 premises automatically.
 
+### Remaining Gap
+
+The current package still does not formalize the bridge theorem saying that the
+bounded quotient ranges used in the manuscript eliminate the specific vacuous
+`-p^{-1}` witness class. That exclusion remains a separate follow-up theorem.
+
 ## Repository Layout
 
 - `CoreExactness/Prelude.lean`
@@ -84,6 +103,7 @@ premises automatically.
 - `CoreExactness/PolyVacuity.lean`
 - `CoreExactness/BoundedExactness.lean`
 - `CoreExactness/RowwiseExactness.lean`
+- `CoreExactness/EuclideanSemantics.lean`
 - `CoreExactness.lean`
 - `docs/lean_formalization_scope_estimate.md`
 - `docs/lean_formalization_work_plan.md`

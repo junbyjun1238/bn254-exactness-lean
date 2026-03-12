@@ -165,6 +165,50 @@ theorem polynomialLevelVacuity_dvd
   exact rowVanishingPolynomial_dvd_of_interpolates n omega hOmega p hp L D
     (Lagrange.interpolate Finset.univ omega (quotientValues omega p L D)) hQ
 
+/--
+Degree-facing corollary for the concrete Lagrange-interpolated vacuous quotient:
+the interpolant used to witness vacuity still has degree strictly below the row
+domain size.
+-/
+theorem vacuousInterpolant_degree_lt
+  {F : Type} [Field F]
+  (n : Nat)
+  (omega : Fin n -> F)
+  (hOmega : Set.InjOn omega Set.univ)
+  (p : F)
+  (L D : Polynomial F) :
+  let qVals := quotientValues omega p L D
+  let qPoly : Polynomial F := Lagrange.interpolate Finset.univ omega qVals
+  qPoly.degree < n := by
+  classical
+  dsimp
+  have hOmegaFinset : Set.InjOn omega (↑(Finset.univ : Finset (Fin n)) : Set (Fin n)) := by
+    simpa using hOmega
+  simpa using
+    (Lagrange.degree_interpolate_lt (s := Finset.univ) (v := omega)
+      (r := quotientValues omega p L D) hOmegaFinset)
+
+/--
+Combined manuscript-facing polynomial vacuity package:
+the concrete Lagrange-interpolated quotient both makes the quotient-check
+remainder divisible by the row-domain vanishing polynomial and still satisfies
+the expected low-degree bound.
+-/
+theorem polynomialLevelVacuity_dvd_and_degree
+  {F : Type} [Field F]
+  (n : Nat)
+  (omega : Fin n -> F)
+  (hOmega : Set.InjOn omega Set.univ)
+  (p : F) (hp : Ne p 0)
+  (L D : Polynomial F) :
+  let qVals := quotientValues omega p L D
+  let qPoly : Polynomial F := Lagrange.interpolate Finset.univ omega qVals
+  rowVanishingPolynomial omega ∣ vacuityRemainder p L D qPoly ∧ qPoly.degree < n := by
+  classical
+  dsimp
+  exact ⟨polynomialLevelVacuity_dvd n omega hOmega p hp L D,
+    vacuousInterpolant_degree_lt n omega hOmega p L D⟩
+
 end
 
 end CoreExactness

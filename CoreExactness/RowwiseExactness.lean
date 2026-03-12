@@ -13,13 +13,12 @@ shape: canonical lifts for `L` and `D`, a chosen integer lift for the quotient,
 a no-wrap bound for `D + p * q`, and a satisfied row equality in `ZMod r`.
 -/
 theorem coreRowwiseExactnessFromCanonicalLifts
-  (r p b : Nat)
+  (r p : Nat)
   (L D q : ZMod r)
   (cL cD : CanonicalLift r)
   (qLift : Int)
   (hL : Represents r L cL)
   (hD : Represents r D cD)
-  (_hqRange : InQuotientRange (Int.ofNat b) qLift)
   (hqRep : (qLift : ZMod r) = q)
   (hNoWrap :
     And (0 <= cD.lift + Int.ofNat p * qLift)
