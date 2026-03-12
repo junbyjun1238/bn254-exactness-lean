@@ -1,48 +1,48 @@
-# BN254 Exactness Lean Formalization
+﻿# BN254 Exactness Lean Formalization
 
-This repository contains a standalone Lean 4 formalization of the core theorem
-spine behind the BN254 deferred-quotient exactness repair note.
+This repository contains a standalone Lean 4 formalization of the algebraic
+core behind the BN254 deferred-quotient exactness repair note.
 
-The formalization is intentionally narrow. It isolates the mathematical core of
-the vacuity diagnosis and the exactness repair, while leaving backend,
-catalogue, and circuit-integration questions outside the current scope.
+The scope is intentionally narrow. It isolates the vacuity diagnosis and the
+exactness-repair spine at the theorem level, while leaving backend, circuit,
+and catalogue-specific obligations out of scope.
 
 ## What Is Proved
 
-The current Lean package proves the following core statements.
+The current package proves the following core results.
 
 1. `outerFieldGenericRowwiseVacuity`
-   - In any field, if `p != 0`, then a deferred-quotient row equation of the
-     form `L = D + p * Q` can be made tautologically true by choosing the
-     quotient witness pointwise as `(L - D) / p`.
+   - In any field, if `p != 0`, then a deferred-quotient row equation
+     `L = D + p * Q` can be made tautologically true by choosing the quotient
+     witness pointwise as `(L - D) / p`.
 
-2. `boundedDeferredQuotientExactness`
-   - If two integer lifts represent the same residue in `ZMod r` and both lifts
-     lie in the canonical interval `[0, r)`, then they are equal as integers.
+2. `equalOfBoundedCastEq`
+   - If two integers map to the same residue in `ZMod r` and both already lie
+     in `[0, r)`, then they are equal as integers.
 
-3. `coreRowwiseExactnessFromCanonicalLifts`
-   - This packages the bounded exactness lemma in the manuscript-facing rowwise
-     form: canonical lifts for the residue side, an integer lift for the
-     quotient, a no-wrap bound, and a satisfied modular equality imply exact
+3. `boundedDeferredQuotientExactness`
+   - A manuscript-facing wrapper around the bounded cast-equality core:
+     canonical lifts and a no-wrap bound upgrade modular equality to exact
      integer equality.
 
-4. `euclideanQuotientRemainderFromCanonicalLifts`
-   - Once the rowwise exactness theorem has produced an exact identity and the
-     designated residue lift lies in `[0, p)`, the residue is recovered as
-     `L mod p` and the quotient is recovered as `L / p`.
+4. `coreRowwiseExactnessFromCanonicalLifts`
+   - The rowwise exactness theorem in the concrete manuscript shape: canonical
+     lifts for `L` and `D`, an integer lift for the quotient, a no-wrap bound,
+     and a satisfied modular row equality imply exact integer equality.
 
-5. `polynomialLevelVacuity`
+5. `euclideanQuotientRemainderFromCanonicalLifts`
+   - Once exactness is established and the designated residue lift lies in
+     `[0, p)`, the residue is recovered as `L mod p` and the quotient is
+     recovered as `L / p`.
+
+6. `polynomialLevelVacuity`
    - If the quotient witness polynomial is chosen by interpolating the vacuous
      rowwise quotient values over a finite evaluation domain, then the
      deferred-quotient remainder vanishes on every sampled node.
 
-6. `polynomialLevelVacuity_dvd`
-   - The same polynomial-level vacuity construction implies that the
-     row-domain vanishing polynomial divides the deferred-quotient remainder.
-
 7. `polynomialLevelVacuity_dvd_and_degree`
-   - The concrete Lagrange-interpolated vacuous quotient simultaneously yields
-     row-domain divisibility and still satisfies the expected low-degree bound
+   - The concrete Lagrange-interpolated vacuous quotient simultaneously gives
+     row-domain divisibility and the expected low-degree bound
      `degree qPoly < n`.
 
 8. `quotientRangeExcludesNegInv`
@@ -52,7 +52,7 @@ The current Lean package proves the following core statements.
 
 ## Current Mathematical Boundary
 
-This repository proves the core algebraic spine only.
+This repository proves the algebraic core only.
 
 In scope:
 
@@ -61,9 +61,9 @@ In scope:
 - manuscript-facing rowwise exactness from those lifts,
 - Euclidean quotient/remainder recovery from exactness plus canonical residue
   range,
-- polynomial vacuity over a finite evaluation domain,
-- divisibility by the row-domain vanishing polynomial.
-- a degree-facing corollary for the concrete interpolated vacuous quotient.
+- polynomial vacuity over a finite injective evaluation domain,
+- divisibility by the row-domain vanishing polynomial,
+- a degree-facing corollary for the concrete interpolated vacuous quotient,
 - explicit exclusion of the `-p^{-1}` vacuous witness class under bounded
   unsigned quotient ranges.
 
@@ -82,19 +82,18 @@ Out of scope:
 
 The polynomial divisibility result is stated for a general finite evaluation
 domain `omega : Fin n -> F` with an injectivity hypothesis. The divisor is the
-row-domain vanishing polynomial
-
-`rowVanishingPolynomial omega = ∏ i, (X - C (omega i))`.
+row-domain vanishing polynomial, i.e. the product over the sampled nodes of
+`(X - C (omega i))`.
 
 This is more general than a subgroup-specific statement such as `X^n - 1`. If
 the evaluation domain later specializes to a multiplicative subgroup, that
-specialization should be stated separately at the manuscript level.
+specialization should be stated separately.
 
 ### Conditional Exactness
 
 The exactness theorems here are conditional theorems. They assume the
 canonical-lift and no-wrap premises required for the integer lift step. This
-repository does not yet prove that a particular circuit backend enforces those
+repository does not prove that a particular circuit backend enforces those
 premises automatically.
 
 ## Repository Layout
@@ -122,14 +121,13 @@ lake exe cache get
 lake build
 ```
 
-The current intended state is a full successful `lake build` with no remaining
-`sorry` placeholders in the core theorem files.
+The intended state is a clean successful `lake build` with no `sorry`
+placeholders in the core theorem files.
 
 ## Codespaces
 
-The repository includes a `.devcontainer/` setup that warms the environment by
-installing Lean, fetching the mathlib cache, and running the standard build
-path automatically.
+The repository includes a `.devcontainer/` setup that installs Lean, warms the
+mathlib cache, and runs the standard build path automatically.
 
 ## Working Style
 
