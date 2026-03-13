@@ -25,32 +25,37 @@ The current package proves the following core results.
      canonical lifts and a no-wrap bound upgrade modular equality to exact
      integer equality.
 
-4. `coreRowwiseExactnessFromCanonicalLifts`
+4. `coreRowwiseExactnessFromRepresentativeD`
+   - A smaller representative-level rowwise theorem: only `L` needs canonical
+     packaging, while the `D` side is handled as an explicit integer
+     representative plus its residue-class equality.
+
+5. `coreRowwiseExactnessFromCanonicalLifts`
    - The rowwise exactness theorem in the concrete manuscript shape: canonical
      lifts for `L` and `D`, an integer lift for the quotient, a no-wrap bound,
      and a satisfied modular row equality imply exact integer equality.
 
-5. `euclideanQuotientRemainderFromCanonicalLifts`
+6. `euclideanQuotientRemainderFromCanonicalLifts`
    - Once exactness is established and the designated residue lift lies in
      `[0, p)`, the residue is recovered as `L mod p` and the quotient is
      recovered as `L / p`.
 
-6. `polynomialLevelVacuity`
+7. `polynomialLevelVacuity`
    - If the quotient witness polynomial is chosen by interpolating the vacuous
      rowwise quotient values over a finite evaluation domain, then the
      deferred-quotient remainder vanishes on every sampled node.
 
-7. `polynomialLevelVacuity_dvd_and_degree`
+8. `polynomialLevelVacuity_dvd_and_degree`
    - The concrete Lagrange-interpolated vacuous quotient simultaneously gives
      row-domain divisibility and the expected low-degree bound
      `degree qPoly < n`.
 
-8. `quotientRangeExcludesNegInv`
+9. `quotientRangeExcludesNegInv`
    - Under the manuscript-style unsigned quotient bound and explicit headroom,
      the bounded quotient interval excludes the specific vacuous witness class
      `-p^{-1}` in the prime-field outer modulus.
 
-9. `boundedRepairExcludesNegInvAndRecoversEuclideanSemantics`
+10. `boundedRepairExcludesNegInvAndRecoversEuclideanSemantics`
    - A single manuscript-facing package theorem combines the bounded range
      exclusion, rowwise exactness path, and Euclidean recovery path into one
      result.
