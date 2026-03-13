@@ -3,6 +3,8 @@
 This repository contains a standalone Lean 4 formalization of the algebraic
 core behind the BN254 deferred-quotient exactness repair note.
 
+License: MIT (`LICENSE`)
+
 The scope is intentionally narrow. It isolates the vacuity diagnosis and the
 exactness-repair spine at the theorem level, while leaving backend, circuit,
 and catalogue-specific obligations out of scope.
