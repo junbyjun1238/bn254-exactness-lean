@@ -209,6 +209,134 @@ theorem polynomialLevelVacuity_dvd_and_degree
   exact ⟨polynomialLevelVacuity_dvd n omega hOmega p hp L D,
     vacuousInterpolant_degree_lt n omega hOmega p L D⟩
 
+ 
+/--
+The row-domain vanishing polynomial is monic.
+-/
+theorem rowVanishingPolynomial_monic
+  {F : Type} [Field F] {n : Nat}
+  (omega : Fin n -> F) :
+  (rowVanishingPolynomial omega).Monic := by
+  classical
+  simpa [rowVanishingPolynomial] using
+    (Polynomial.monic_prod_of_monic (s := Finset.univ)
+      (f := fun i : Fin n => Polynomial.X - Polynomial.C (omega i))
+      (fun i _ => Polynomial.monic_X_sub_C (omega i)))
+
+/--
+The row-domain vanishing polynomial has natDegree exactly equal to the size of
+the sampled row domain.
+-/
+theorem rowVanishingPolynomial_natDegree
+  {F : Type} [Field F] {n : Nat}
+  (omega : Fin n -> F) :
+  (rowVanishingPolynomial omega).natDegree = n := by
+  classical
+  simpa [rowVanishingPolynomial, Finset.card_univ] using
+    (Polynomial.natDegree_prod_of_monic (s := Finset.univ)
+      (f := fun i : Fin n => Polynomial.X - Polynomial.C (omega i))
+      (h := fun i _ => Polynomial.monic_X_sub_C (omega i)))
+
+/--
+Aggregated numerator vacuity: any finite linear combination of vacuous
+per-relation remainders is still divisible by the row-domain vanishing
+polynomial.
+-/
+theorem aggregatedNumeratorVacuity_dvd
+  {F : Type} [Field F]
+  {idx : Type}
+  (s : Finset idx)
+  (n : Nat)
+  (omega : Fin n -> F)
+  (hOmega : Set.InjOn omega Set.univ)
+  (p : F) (hp : Ne p 0)
+  (L D : idx -> Polynomial F)
+  (coeff : idx -> F) :
+  let qPoly : idx -> Polynomial F :=
+    fun t => Lagrange.interpolate Finset.univ omega (quotientValues omega p (L t) (D t))
+  let N : Polynomial F :=
+    Finset.sum s (fun t => Polynomial.C (coeff t) * vacuityRemainder p (L t) (D t) (qPoly t))
+  rowVanishingPolynomial omega ∣ N := by
+  classical
+  dsimp
+  induction s using Finset.induction_on with
+  | empty =>
+      simp
+  | @insert a s ha hs =>
+      have hDivA :
+          rowVanishingPolynomial omega ∣
+            Polynomial.C (coeff a) *
+              vacuityRemainder p (L a) (D a)
+                (Lagrange.interpolate Finset.univ omega (quotientValues omega p (L a) (D a))) := by
+        rcases polynomialLevelVacuity_dvd n omega hOmega p hp (L a) (D a) with ⟨H, hH⟩
+        refine ⟨Polynomial.C (coeff a) * H, ?_⟩
+        calc
+          Polynomial.C (coeff a) *
+              vacuityRemainder p (L a) (D a)
+                (Lagrange.interpolate Finset.univ omega (quotientValues omega p (L a) (D a))) =
+              Polynomial.C (coeff a) * (rowVanishingPolynomial omega * H) := by
+            rw [hH]
+          _ = rowVanishingPolynomial omega * (Polynomial.C (coeff a) * H) := by
+            ring
+      simpa [Finset.sum_insert, ha] using dvd_add hDivA hs
+
+/--
+Existence form of aggregated numerator vacuity. The aggregated numerator can be
+written as the row-domain vanishing polynomial times an explicit quotient
+polynomial.
+-/
+theorem aggregatedNumeratorVacuity_existsQuotient
+  {F : Type} [Field F]
+  {idx : Type}
+  (s : Finset idx)
+  (n : Nat)
+  (omega : Fin n -> F)
+  (hOmega : Set.InjOn omega Set.univ)
+  (p : F) (hp : Ne p 0)
+  (L D : idx -> Polynomial F)
+  (coeff : idx -> F) :
+  let qPoly : idx -> Polynomial F :=
+    fun t => Lagrange.interpolate Finset.univ omega (quotientValues omega p (L t) (D t))
+  let N : Polynomial F :=
+    Finset.sum s (fun t => Polynomial.C (coeff t) * vacuityRemainder p (L t) (D t) (qPoly t))
+  ∃ HN : Polynomial F, N = rowVanishingPolynomial omega * HN := by
+  classical
+  dsimp
+  simpa using aggregatedNumeratorVacuity_dvd s n omega hOmega p hp L D coeff
+
+/--
+Generic quotient-degree lemma for row-domain divisibility.
+
+Once a numerator `N` is known to factor as `Z_Ω * HN` and already satisfies the
+manuscript-side bound `natDegree N ≤ 2*n - 2`, the divided quotient `HN` has
+natDegree at most `n - 2`.
+-/
+theorem quotientNatDegree_le_of_rowVanishing_mul
+  {F : Type} [Field F]
+  (n : Nat)
+  (omega : Fin n -> F)
+  (hn : 2 <= n)
+  (N HN : Polynomial F)
+  (hHN : N = rowVanishingPolynomial omega * HN)
+  (hNatDegreeN : N.natDegree <= 2 * n - 2) :
+  HN.natDegree <= n - 2 := by
+  by_cases hZero : HN = 0
+  · have hBound : 0 <= n - 2 := by omega
+    simpa [hZero] using hBound
+  · have hZMonic : (rowVanishingPolynomial omega).Monic :=
+      rowVanishingPolynomial_monic omega
+    have hZNe : rowVanishingPolynomial omega ≠ 0 := hZMonic.ne_zero
+    have hMulDeg :
+        (rowVanishingPolynomial omega * HN).natDegree =
+          (rowVanishingPolynomial omega).natDegree + HN.natDegree := by
+      simpa using Polynomial.natDegree_mul hZNe hZero
+    have hStep :
+        (rowVanishingPolynomial omega * HN).natDegree <= 2 * n - 2 := by
+      simpa [hHN] using hNatDegreeN
+    have hStep' : n + HN.natDegree <= 2 * n - 2 := by
+      simpa [rowVanishingPolynomial_natDegree omega, hMulDeg] using hStep
+    omega
+
 end
 
 end CoreExactness

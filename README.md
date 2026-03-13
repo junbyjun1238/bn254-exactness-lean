@@ -50,15 +50,33 @@ The current package proves the following core results.
      row-domain divisibility and the expected low-degree bound
      `degree qPoly < n`.
 
-9. `quotientRangeExcludesNegInv`
+9. `aggregatedNumeratorVacuity_dvd`
+   - Finite linear combinations of vacuous per-relation remainders are still
+     divisible by the row-domain vanishing polynomial.
+
+10. `aggregatedNumeratorVacuity_existsQuotient`
+    - The aggregated numerator admits an explicit quotient polynomial `H_N`
+      with `N = Z_Ω * H_N`.
+
+11. `quotientNatDegree_le_of_rowVanishing_mul`
+    - A generic degree-facing lemma: if a numerator already factors as
+      `Z_Ω * H_N` and satisfies the manuscript-style bound
+      `natDegree N ≤ 2*n - 2`, then `natDegree H_N ≤ n - 2`.
+
+12. `quotientRangeExcludesNegInv`
    - Under the manuscript-style unsigned quotient bound and explicit headroom,
      the bounded quotient interval excludes the specific vacuous witness class
      `-p^{-1}` in the prime-field outer modulus.
 
-10. `boundedRepairExcludesNegInvAndRecoversEuclideanSemantics`
+13. `boundedRepairExcludesNegInvAndRecoversEuclideanSemantics`
    - A single manuscript-facing package theorem combines the bounded range
      exclusion, rowwise exactness path, and Euclidean recovery path into one
      result.
+
+14. `bn254M31QuotientBound31ExcludesNegInv` /
+    `bn254M31QuotientBound66ExcludesNegInv`
+   - Thin BN254/M31 specializations that pin the paper constants and the two
+     quotient-class headroom inequalities used in the note.
 
 ## Current Mathematical Boundary
 
@@ -74,6 +92,9 @@ In scope:
 - polynomial vacuity over a finite injective evaluation domain,
 - divisibility by the row-domain vanishing polynomial,
 - a degree-facing corollary for the concrete interpolated vacuous quotient,
+- aggregated numerator vacuity and its explicit quotient witness,
+- a degree-facing bound for the aggregated divided quotient under an explicit
+  numerator natDegree hypothesis,
 - explicit exclusion of the `-p^{-1}` vacuous witness class under bounded
   unsigned quotient ranges.
 
@@ -116,7 +137,10 @@ premises automatically.
 - `CoreExactness/EuclideanSemantics.lean`
 - `CoreExactness/RangeExclusion.lean`
 - `CoreExactness/PackagedSemantics.lean`
+- `CoreExactness/BN254Instance.lean`
 - `CoreExactness.lean`
+- `.github/workflows/lean-build.yml`
+- `docs/paper-to-lean-map.md`
 - `docs/lean_formalization_scope_estimate.md`
 - `docs/lean_formalization_work_plan.md`
 - `docs/lean_codespaces_workflow.md`
@@ -134,6 +158,10 @@ lake build
 
 The intended state is a clean successful `lake build` with no `sorry`
 placeholders in the core theorem files.
+
+The repository also includes a visible GitHub Actions workflow at
+`.github/workflows/lean-build.yml` that runs the same cache-and-build path on
+push and pull request.
 
 ## Codespaces
 

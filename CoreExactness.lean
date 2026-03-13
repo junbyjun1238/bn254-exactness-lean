@@ -6,3 +6,4 @@ import CoreExactness.RowwiseExactness
 import CoreExactness.EuclideanSemantics
 import CoreExactness.RangeExclusion
 import CoreExactness.PackagedSemantics
+import CoreExactness.BN254Instance

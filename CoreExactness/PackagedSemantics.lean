@@ -4,6 +4,7 @@ import CoreExactness.RangeExclusion
 namespace CoreExactness
 
 set_option autoImplicit false
+set_option linter.style.whitespace false
 
 /--
 A single manuscript-facing package theorem: under the bounded unsigned quotient
